@@ -1,104 +1,173 @@
-"use client"
+"use client";
 
 import Link from 'next/link';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import { Badge, Card, SectionHeading } from '../components/ui';
+
+const features = [
+  { title: 'Specialty templates', description: 'Tailored templates for cardiology, pediatrics, orthopedics, and more.' },
+  { title: 'Voice dictation', description: 'Capture notes naturally with browser speech-to-text right in your workflow.' },
+  { title: 'Multi-language communication', description: 'Generate patient-friendly follow-ups in multiple languages.' },
+  { title: 'Analytics dashboard', description: 'Track consultation trends, template usage, and estimated time saved.' },
+  { title: 'Doctor collaboration', description: 'Share templates, assign permissions, and collaborate with your team.' },
+];
+
+const steps = [
+  'Choose a specialty template',
+  'Dictate or write consultation notes',
+  'Generate patient email and action plan',
+  'Track insights and team usage over time',
+];
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-4 py-12">
-        {/* Navigation */}
-        <nav className="flex justify-between items-center mb-12">
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
-            MediNotes Pro
-          </h1>
+    <main className="min-h-screen bg-gradient-to-b from-white via-blue-50/40 to-white dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <nav className="mb-16 flex items-center justify-between">
           <div>
+            <p className="text-sm font-medium text-blue-600">Healthcare AI Platform</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">MediNotes Pro</h1>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link href="/pricing" className="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">
+              Pricing
+            </Link>
             <SignedOut>
               <SignInButton mode="modal">
-                <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">
-                  Sign In
+                <button className="rounded-lg bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700">
+                  Get Started
                 </button>
               </SignInButton>
             </SignedOut>
             <SignedIn>
-              <div className="flex items-center gap-4">
-                <Link 
-                  href="/product" 
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors"
-                >
-                  Go to App
+              <div className="flex items-center gap-3">
+                <Link href="/product" className="rounded-lg bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700">
+                  Open App
                 </Link>
-                <UserButton showName={true} />
+                <UserButton showName />
               </div>
             </SignedIn>
           </div>
         </nav>
 
-        {/* Hero Section */}
-        <div className="text-center py-16">
-          <h2 className="text-6xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6">
-            Transform Your
-            <br />
-            Consultation Notes
-          </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto">
-            AI-powered assistant that generates professional summaries, action items, and patient communications from your consultation notes
-          </p>
-
-          {/* Features Grid */}
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-12">
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
-              <div className="relative bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 backdrop-blur-sm">
-                <div className="text-3xl mb-4">📋</div>
-                <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">Professional Summaries</h3>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">
-                  Generate comprehensive medical record summaries from your notes
-                </p>
-              </div>
-            </div>
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-green-600 rounded-xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
-              <div className="relative bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 backdrop-blur-sm">
-                <div className="text-3xl mb-4">✅</div>
-                <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">Action Items</h3>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">
-                  Clear next steps and follow-up actions for every consultation
-                </p>
-              </div>
-            </div>
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
-              <div className="relative bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 backdrop-blur-sm">
-                <div className="text-3xl mb-4">📧</div>
-                <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">Patient Emails</h3>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">
-                  Draft clear, patient-friendly email communications automatically
-                </p>
-              </div>
+        <section className="grid items-center gap-10 pb-20 lg:grid-cols-2">
+          <div>
+            <Badge>Built for modern clinics</Badge>
+            <h2 className="mt-5 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white">
+              Turn consultation notes into clear patient outcomes.
+            </h2>
+            <p className="mt-6 max-w-xl text-lg text-gray-600 dark:text-gray-300">
+              MediNotes Pro helps doctors document faster, communicate clearly, and stay aligned with teams using AI-powered summaries and follow-up workflows.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <button className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700">Sign Up Free</button>
+                </SignInButton>
+              </SignedOut>
+              <SignedIn>
+                <Link href="/product" className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700">
+                  Go to Dashboard
+                </Link>
+              </SignedIn>
+              <Link href="#how-it-works" className="rounded-xl border border-gray-300 px-6 py-3 font-semibold text-gray-800 transition hover:bg-gray-100 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-800">
+                Learn More
+              </Link>
             </div>
           </div>
-          
-          <SignedOut>
-            <SignInButton mode="modal">
-              <button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all transform hover:scale-105">
-                Start Free Trial
-              </button>
-            </SignInButton>
-          </SignedOut>
-          <SignedIn>
-            <Link href="/product">
-              <button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all transform hover:scale-105">
-                Open Consultation Assistant
-              </button>
-            </Link>
-          </SignedIn>
-        </div>
+          <Card className="relative overflow-hidden p-0">
+            <div className="bg-gradient-to-br from-blue-600 to-indigo-600 p-8 text-white">
+              <p className="text-sm uppercase tracking-wide text-blue-100">Live product preview</p>
+              <h3 className="mt-3 text-2xl font-semibold">Consultation command center</h3>
+              <p className="mt-2 text-blue-100">Document visits, generate patient emails, and monitor team performance from one workspace.</p>
+            </div>
+            <div className="grid gap-3 p-6 sm:grid-cols-2">
+              <div className="rounded-xl bg-gray-50 p-4 dark:bg-gray-800">
+                <p className="text-sm text-gray-500">Notes generated today</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">146</p>
+              </div>
+              <div className="rounded-xl bg-gray-50 p-4 dark:bg-gray-800">
+                <p className="text-sm text-gray-500">Avg. time saved</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">3.8 hrs</p>
+              </div>
+            </div>
+          </Card>
+        </section>
 
-        {/* Trust Indicators */}
-        <div className="text-center text-sm text-gray-500 dark:text-gray-400">
-          <p>HIPAA Compliant • Secure • Professional</p>
-        </div>
+        <section className="py-16">
+          <SectionHeading eyebrow="Features" title="Everything your care team needs" description="Purpose-built tools for faster documentation and better patient communication." />
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {features.map((feature) => (
+              <Card key={feature.title}>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{feature.title}</h3>
+                <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">{feature.description}</p>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        <section id="how-it-works" className="py-16">
+          <SectionHeading eyebrow="How it works" title="From consultation to follow-up in minutes" />
+          <div className="grid gap-4 md:grid-cols-4">
+            {steps.map((step, index) => (
+              <Card key={step} className="text-center">
+                <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-700 dark:bg-blue-900/50 dark:text-blue-200">
+                  {index + 1}
+                </div>
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-200">{step}</p>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        <section className="py-16">
+          <SectionHeading eyebrow="Pricing" title="Plans for every practice size" description="Start free, scale as your clinic grows." />
+          <div className="grid gap-5 md:grid-cols-3">
+            {['Starter', 'Professional', 'Enterprise'].map((plan, idx) => (
+              <Card key={plan} className={idx === 1 ? 'border-blue-200 ring-2 ring-blue-200 dark:border-blue-700 dark:ring-blue-700/60' : ''}>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{plan}</h3>
+                <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">{idx === 0 ? 'Solo practitioners' : idx === 1 ? 'Growing clinics' : 'Large organizations'}</p>
+                <p className="mt-4 text-3xl font-bold text-gray-900 dark:text-white">{idx === 0 ? '$19' : idx === 1 ? '$79' : 'Custom'}</p>
+              </Card>
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Link href="/pricing" className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700">
+              View Full Pricing
+            </Link>
+          </div>
+        </section>
+
+        <section className="py-16">
+          <SectionHeading eyebrow="Trusted by clinicians" title="Built to reduce admin burden and improve continuity of care" />
+          <div className="grid gap-5 md:grid-cols-3">
+            <Card><p className="text-sm text-gray-700 dark:text-gray-200">“Our doctors save hours weekly and patient emails are finally consistent.”</p><p className="mt-3 text-xs font-semibold text-gray-500">Clinic Operations Lead</p></Card>
+            <Card><p className="text-sm text-gray-700 dark:text-gray-200">“The specialty templates dramatically improved our chart quality.”</p><p className="mt-3 text-xs font-semibold text-gray-500">Cardiology Team Manager</p></Card>
+            <Card><p className="text-sm text-gray-700 dark:text-gray-200">“Simple to adopt. Huge impact on documentation speed.”</p><p className="mt-3 text-xs font-semibold text-gray-500">Medical Director</p></Card>
+          </div>
+        </section>
+
+        <section className="py-20">
+          <Card className="bg-gradient-to-r from-blue-600 to-indigo-600 text-center text-white">
+            <h3 className="text-3xl font-bold">Ready to modernize your consultation workflow?</h3>
+            <p className="mx-auto mt-3 max-w-2xl text-blue-100">Join teams using MediNotes Pro to deliver faster documentation and better patient communication.</p>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <button className="rounded-xl bg-white px-6 py-3 font-semibold text-blue-700 transition hover:bg-blue-50">Start Free</button>
+                </SignInButton>
+              </SignedOut>
+              <SignedIn>
+                <Link href="/product" className="rounded-xl bg-white px-6 py-3 font-semibold text-blue-700 transition hover:bg-blue-50">
+                  Go to App
+                </Link>
+              </SignedIn>
+              <Link href="/pricing" className="rounded-xl border border-blue-200 px-6 py-3 font-semibold text-white transition hover:bg-blue-500">
+                Compare Plans
+              </Link>
+            </div>
+          </Card>
+        </section>
       </div>
     </main>
   );
