@@ -11,7 +11,14 @@ import { AppShell } from './app-shell';
 import { Badge, Card, Stat } from './ui';
 import { clerkPricingTableAppearance } from '../lib/clerk-appearance';
 import { FREE_TRIAL_LIMITS, PLAN_KEYS, isWithinFreeTrial } from '../lib/plans';
-
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 declare global {
   interface Window {
     SpeechRecognition?: new () => SpeechRecognition;
@@ -298,31 +305,50 @@ function ConsultationForm() {
               <div className="grid gap-5 sm:grid-cols-2">
                 <label className="block text-sm">
                   <span className="text-sm font-medium leading-none text-gray-700 dark:text-gray-200">Specialty Category</span>
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => {
-                      const category = e.target.value;
-                      setSelectedCategory(category);
-                      setSelectedSpecialty(specialties[category as keyof typeof specialties][0]);
-                    }}
-                    className={fieldClassName}
-                  >
-                    {Object.keys(specialties).map((category) => (
-                      <option key={category} value={category}>{category}</option>
-                    ))}
-                  </select>
+                <Select
+  value={selectedCategory}
+  onValueChange={(value) => {
+    setSelectedCategory(value);
+    setSelectedSpecialty(
+      specialties[value as keyof typeof specialties][0]
+    );
+  }}
+>
+  <SelectTrigger className={fieldClassName}>
+    <SelectValue placeholder="Select specialty" />
+  </SelectTrigger>
+
+  <SelectContent className="z-50 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-lg">
+    <SelectGroup>
+      {Object.keys(specialties).map((category) => (
+        <SelectItem key={category} value={category}>
+          {category}
+        </SelectItem>
+      ))}
+    </SelectGroup>
+  </SelectContent>
+</Select>
                 </label>
                 <label className="block text-sm">
                   <span className="text-sm font-medium leading-none text-gray-700 dark:text-gray-200">Sub-specialty Template</span>
-                  <select
-                    value={selectedSpecialty}
-                    onChange={(e) => setSelectedSpecialty(e.target.value)}
-                    className={fieldClassName}
-                  >
-                    {specialtyOptions.map((specialty) => (
-                      <option key={specialty} value={specialty}>{specialty}</option>
-                    ))}
-                  </select>
+            <Select
+  value={selectedSpecialty}
+  onValueChange={(value) => setSelectedSpecialty(value)}
+>
+  <SelectTrigger className={fieldClassName}>
+    <SelectValue placeholder="Select template" />
+  </SelectTrigger>
+
+  <SelectContent className="z-50 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-lg">
+    <SelectGroup>
+      {specialtyOptions.map((specialty) => (
+        <SelectItem key={specialty} value={specialty}>
+          {specialty}
+        </SelectItem>
+      ))}
+    </SelectGroup>
+  </SelectContent>
+</Select>
                 </label>
               </div>
 
@@ -402,15 +428,24 @@ function ConsultationForm() {
             <Card>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Summary Language</h3>
               <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">Generate the full summary, next steps, and patient email in the selected language.</p>
-              <select
-                value={selectedLanguage}
-                onChange={(e) => setSelectedLanguage(e.target.value)}
-                className={fieldClassName}
-              >
-                {Object.keys(emailTranslations).map((language) => (
-                  <option key={language} value={language}>{language}</option>
-                ))}
-              </select>
+         <Select
+  value={selectedLanguage}
+  onValueChange={(value) => setSelectedLanguage(value)}
+>
+  <SelectTrigger className={fieldClassName}>
+    <SelectValue placeholder="Select language" />
+  </SelectTrigger>
+
+  <SelectContent className="z-50 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-lg">
+    <SelectGroup>
+      {Object.keys(emailTranslations).map((language) => (
+        <SelectItem key={language} value={language}>
+          {language}
+        </SelectItem>
+      ))}
+    </SelectGroup>
+  </SelectContent>
+</Select>
               <div className="mt-4 rounded-xl bg-gray-50 p-4 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-200">
                 <p className="mb-2 font-semibold">Patient email preview ({selectedLanguage})</p>
                 <p>{emailTranslations[selectedLanguage]}</p>
