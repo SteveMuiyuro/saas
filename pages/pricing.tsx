@@ -1,12 +1,15 @@
 "use client";
 
-import { PricingTable, SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
+import { PricingTable, SignedIn, SignedOut, SignInButton, useAuth } from '@clerk/nextjs';
 import { AppShell } from '../components/app-shell';
 import { Card } from '../components/ui';
 import { clerkPricingTableAppearance } from '../lib/clerk-appearance';
-import { FREE_TRIAL_LIMITS } from '../lib/plans';
+import { FREE_TRIAL_LIMITS, PLAN_KEYS } from '../lib/plans';
 
 export default function PricingPage() {
+  const { has } = useAuth();
+  const hasProPlan = Boolean(has?.({ plan: PLAN_KEYS.pro }) || has?.({ plan: PLAN_KEYS.legacyPro }));
+
   return (
     <AppShell title="Pricing" subtitle="Billing and access are synchronized with Clerk subscriptions.">
       <div className="space-y-6">
@@ -28,16 +31,35 @@ export default function PricingPage() {
               </p>
               <div className="mt-5 grid gap-4 md:grid-cols-2">
                 <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/50">
-                  <h4 className="text-base font-semibold text-gray-900 dark:text-white">Free</h4>
+                  <div className="flex items-center justify-between gap-2">
+                    <h4 className="text-base font-semibold text-gray-900 dark:text-white">Free</h4>
+                    {!hasProPlan && (
+                      <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800 dark:bg-green-900/40 dark:text-green-200">
+                        Active
+                      </span>
+                    )}
+                  </div>
                   <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">$0/month</p>
                   <ul className="mt-3 space-y-2 text-sm text-gray-700 dark:text-gray-200">
                     <li>• {FREE_TRIAL_LIMITS.trialDays} day trial access</li>
                     <li>• Up to {FREE_TRIAL_LIMITS.consultations} consultations</li>
                     <li>• Up to {FREE_TRIAL_LIMITS.voiceRecordings} voice recordings</li>
                   </ul>
+                  {!hasProPlan && (
+                    <button className="mt-4 rounded-lg border border-blue-600 px-3 py-1.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-50 dark:border-blue-400 dark:text-blue-300 dark:hover:bg-blue-950/40">
+                      Try Pro
+                    </button>
+                  )}
                 </div>
                 <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 dark:border-blue-700 dark:bg-blue-950/40">
-                  <h4 className="text-base font-semibold text-gray-900 dark:text-white">Pro</h4>
+                  <div className="flex items-center justify-between gap-2">
+                    <h4 className="text-base font-semibold text-gray-900 dark:text-white">Pro</h4>
+                    {hasProPlan && (
+                      <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800 dark:bg-green-900/40 dark:text-green-200">
+                        Active
+                      </span>
+                    )}
+                  </div>
                   <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">$10/month or $108/year</p>
                   <ul className="mt-3 space-y-2 text-sm text-gray-700 dark:text-gray-200">
                     <li>• Unlimited consultations</li>
@@ -57,13 +79,25 @@ export default function PricingPage() {
               <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Sign in to view Free and Pro options in Clerk Checkout and subscribe to the plan you want to activate.</p>
               <div className="mt-5 grid gap-4 md:grid-cols-2">
                 <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/50">
-                  <h4 className="text-base font-semibold text-gray-900 dark:text-white">Free</h4>
+                  <div className="flex items-center justify-between gap-2">
+                    <h4 className="text-base font-semibold text-gray-900 dark:text-white">Free</h4>
+                    <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800 dark:bg-green-900/40 dark:text-green-200">
+                      Active
+                    </span>
+                  </div>
                   <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">$0/month</p>
                   <ul className="mt-3 space-y-2 text-sm text-gray-700 dark:text-gray-200">
                     <li>• {FREE_TRIAL_LIMITS.trialDays} day trial access</li>
                     <li>• Up to {FREE_TRIAL_LIMITS.consultations} consultations</li>
                     <li>• Up to {FREE_TRIAL_LIMITS.voiceRecordings} voice recordings</li>
                   </ul>
+                  <div className="mt-4">
+                    <SignInButton mode="modal">
+                      <button className="rounded-lg border border-blue-600 px-3 py-1.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-50 dark:border-blue-400 dark:text-blue-300 dark:hover:bg-blue-950/40">
+                        Try Pro
+                      </button>
+                    </SignInButton>
+                  </div>
                 </div>
                 <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 dark:border-blue-700 dark:bg-blue-950/40">
                   <h4 className="text-base font-semibold text-gray-900 dark:text-white">Pro</h4>
