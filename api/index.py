@@ -14,6 +14,7 @@ class Visit(BaseModel):
     patient_name: str
     date_of_visit: str
     notes: str
+    language: str = "English"
 
 
 system_prompt = """
@@ -30,8 +31,11 @@ def user_prompt_for(visit: Visit) -> str:
     return f"""Create the summary, next steps and draft email for:
 Patient Name: {visit.patient_name}
 Date of Visit: {visit.date_of_visit}
+Language: {visit.language}
 Notes:
-{visit.notes}"""
+{visit.notes}
+
+Important: Write all three sections in {visit.language}."""
 
 
 @app.post("/api")

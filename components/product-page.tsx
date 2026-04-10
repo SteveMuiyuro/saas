@@ -231,6 +231,7 @@ function ConsultationForm() {
         patient_name: patientName,
         date_of_visit: visitDate?.toISOString().slice(0, 10),
         notes,
+        language: selectedLanguage,
       }),
       onmessage(ev) {
         buffer += ev.data;
@@ -399,8 +400,8 @@ function ConsultationForm() {
 
           {hasProPlan && (
             <Card>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">UI Language</h3>
-              <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">Switch language context for patient emails.</p>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Summary Language</h3>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">Generate the full summary, next steps, and patient email in the selected language.</p>
               <select
                 value={selectedLanguage}
                 onChange={(e) => setSelectedLanguage(e.target.value)}
