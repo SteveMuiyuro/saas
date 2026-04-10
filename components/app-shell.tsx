@@ -48,7 +48,6 @@ export function AppShell({ children, title, subtitle }: PropsWithChildren<{ titl
                 {subtitle && <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">{subtitle}</p>}
               </div>
               <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Steve Mwangi</span>
                 <UserButton showName />
               </div>
             </div>
