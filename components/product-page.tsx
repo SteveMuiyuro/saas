@@ -9,6 +9,7 @@ import remarkBreaks from 'remark-breaks';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { AppShell } from './app-shell';
 import { Badge, Card, Stat } from './ui';
+import { clerkPricingTableAppearance } from '../lib/clerk-appearance';
 import { FREE_TRIAL_LIMITS, PLAN_KEYS, isWithinFreeTrial } from '../lib/plans';
 
 declare global {
@@ -425,7 +426,7 @@ function ConsultationForm() {
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Upgrade to Pro</h3>
               <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">Unlock unlimited consultations and unlimited voice recordings.</p>
               <div className="mt-4">
-                <PricingTable />
+                <PricingTable appearance={clerkPricingTableAppearance} />
               </div>
             </Card>
           )}

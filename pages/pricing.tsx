@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { PricingTable, SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
 import { AppShell } from '../components/app-shell';
 import { Card } from '../components/ui';
+import { clerkPricingTableAppearance } from '../lib/clerk-appearance';
 import { FREE_TRIAL_LIMITS } from '../lib/plans';
 
 const tiers = [
@@ -77,9 +78,16 @@ export default function PricingPage() {
               </ul>
               <div className="mt-6">
                 <SignedIn>
-                  <Link href="/subscription" className="inline-block rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">
-                    Manage Subscription
-                  </Link>
+                  <div className="flex flex-wrap gap-3">
+                    <Link href="/subscription#billing" className="inline-block rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">
+                      Manage Subscription
+                    </Link>
+                    {tier.name === 'Free Trial' && (
+                      <Link href="/subscription#billing" className="inline-block rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-100 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800">
+                        Try Free Version
+                      </Link>
+                    )}
+                  </div>
                 </SignedIn>
                 <SignedOut>
                   <SignInButton mode="modal">
@@ -96,9 +104,9 @@ export default function PricingPage() {
         <SignedIn>
           <Card>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Checkout with Clerk Billing</h3>
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">Your active Clerk subscription determines which plan features are available in the app.</p>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">Your active Clerk subscription determines which plan features are available in the app. Use this section to upgrade, downgrade to free, or cancel billing.</p>
             <div className="mt-4">
-              <PricingTable />
+              <PricingTable appearance={clerkPricingTableAppearance} />
             </div>
           </Card>
         </SignedIn>
