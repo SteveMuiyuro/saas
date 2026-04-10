@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, FormEvent, useRef } from 'react';
+import { useMemo, useState, FormEvent, useRef, useEffect, useCallback } from 'react';
 import { useAuth, PricingTable, SignedIn, SignedOut, RedirectToSignIn } from '@clerk/nextjs';
 import DatePicker from 'react-datepicker';
 import ReactMarkdown from 'react-markdown';
@@ -108,7 +108,49 @@ function ConsultationForm() {
   }, [userId, usageVersion]);
 
   const speechSupported = typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition);
-  const hasProPlan = Boolean(has?.({ plan: PLAN_KEYS.pro }) || has?.({ plan: PLAN_KEYS.legacyPro }));
+  const resolveHasProPlan = useCallback(() => Boolean(has?.({ plan: PLAN_KEYS.pro }) || has?.({ plan: PLAN_KEYS.legacyPro })), [has]);
+  const [hasProPlan, setHasProPlan] = useState(resolveHasProPlan);
+
+  useEffect(() => {
+    setHasProPlan(resolveHasProPlan());
+  }, [resolveHasProPlan]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    let active = true;
+
+    const refreshPlanStatus = async () => {
+      try {
+        await getToken({ skipCache: true });
+      } finally {
+        if (active) {
+          setHasProPlan(resolveHasProPlan());
+        }
+      }
+    };
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        void refreshPlanStatus();
+      }
+    };
+
+    void refreshPlanStatus();
+    const intervalId = window.setInterval(() => {
+      void refreshPlanStatus();
+    }, 15000);
+
+    window.addEventListener('focus', refreshPlanStatus);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    return () => {
+      active = false;
+      window.clearInterval(intervalId);
+      window.removeEventListener('focus', refreshPlanStatus);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
+  }, [getToken, resolveHasProPlan]);
   const activeFreeTrial = !hasProPlan && isWithinFreeTrial(usage.trialStartedAt);
   const consultationsRemaining = Math.max(FREE_TRIAL_LIMITS.consultations - usage.consultationCount, 0);
   const voiceRecordingsRemaining = Math.max(FREE_TRIAL_LIMITS.voiceRecordings - usage.voiceRecordingCount, 0);
