@@ -44,7 +44,6 @@ export function AppShell({ children, title, subtitle }: PropsWithChildren<{ titl
           <header className="mb-6 rounded-2xl border border-gray-200/80 bg-white/90 p-4 shadow-sm backdrop-blur dark:border-gray-800 dark:bg-gray-900/90">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
-                <p className="text-sm font-medium text-blue-600">Healthcare AI Workspace</p>
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{title}</h1>
                 {subtitle && <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">{subtitle}</p>}
               </div>
