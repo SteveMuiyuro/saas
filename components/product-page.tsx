@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, FormEvent, useRef } from 'react';
-import { useAuth, Protect, PricingTable, SignedIn, SignedOut, RedirectToSignIn } from '@clerk/nextjs';
+import { useAuth, PricingTable, SignedIn, SignedOut, RedirectToSignIn } from '@clerk/nextjs';
 import DatePicker from 'react-datepicker';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -9,6 +9,7 @@ import remarkBreaks from 'remark-breaks';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { AppShell } from './app-shell';
 import { Badge, Card, Stat } from './ui';
+import { FREE_TRIAL_LIMITS, PLAN_KEYS, isWithinFreeTrial } from '../lib/plans';
 
 declare global {
   interface Window {
@@ -53,8 +54,14 @@ const emailTranslations: Record<string, string> = {
 
 const fieldClassName = 'mt-2 w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm shadow-sm transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:ring-blue-900/60';
 
+type UsageState = {
+  consultationCount: number;
+  voiceRecordingCount: number;
+  trialStartedAt: string;
+};
+
 function ConsultationForm() {
-  const { getToken } = useAuth();
+  const { getToken, has, userId } = useAuth();
   const [patientName, setPatientName] = useState('');
   const [visitDate, setVisitDate] = useState<Date | null>(new Date());
   const [notes, setNotes] = useState('');
@@ -66,11 +73,58 @@ function ConsultationForm() {
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [isRecording, setIsRecording] = useState(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const [usageVersion, setUsageVersion] = useState(0);
+
+  const usage = useMemo<UsageState>(() => {
+    void usageVersion;
+    if (!userId || typeof window === 'undefined') {
+      return {
+        consultationCount: 0,
+        voiceRecordingCount: 0,
+        trialStartedAt: new Date().toISOString(),
+      };
+    }
+    const storageKey = `medinotes-plan-usage:${userId}`;
+    const raw = window.localStorage.getItem(storageKey);
+    if (!raw) {
+      const initial: UsageState = {
+        consultationCount: 0,
+        voiceRecordingCount: 0,
+        trialStartedAt: new Date().toISOString(),
+      };
+      window.localStorage.setItem(storageKey, JSON.stringify(initial));
+      return initial;
+    }
+    try {
+      return JSON.parse(raw) as UsageState;
+    } catch {
+      window.localStorage.removeItem(storageKey);
+      return {
+        consultationCount: 0,
+        voiceRecordingCount: 0,
+        trialStartedAt: new Date().toISOString(),
+      };
+    }
+  }, [userId, usageVersion]);
 
   const speechSupported = typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition);
+  const hasProPlan = Boolean(has?.({ plan: PLAN_KEYS.pro }) || has?.({ plan: PLAN_KEYS.legacyPro }));
+  const activeFreeTrial = !hasProPlan && isWithinFreeTrial(usage.trialStartedAt);
+  const consultationsRemaining = Math.max(FREE_TRIAL_LIMITS.consultations - usage.consultationCount, 0);
+  const voiceRecordingsRemaining = Math.max(FREE_TRIAL_LIMITS.voiceRecordings - usage.voiceRecordingCount, 0);
+  const canCreateConsultation = hasProPlan || (activeFreeTrial && consultationsRemaining > 0);
+  const canUseVoiceRecording = hasProPlan || (activeFreeTrial && voiceRecordingsRemaining > 0);
+
+  const specialtyOptions = useMemo(() => specialties[selectedCategory as keyof typeof specialties], [selectedCategory]);
+
+  function persistUsage(next: UsageState) {
+    if (!userId || typeof window === 'undefined') return;
+    window.localStorage.setItem(`medinotes-plan-usage:${userId}`, JSON.stringify(next));
+    setUsageVersion((v) => v + 1);
+  }
 
   function toggleRecording() {
-    if (!speechSupported) return;
+    if (!speechSupported || !canUseVoiceRecording) return;
 
     if (!recognitionRef.current) {
       const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -95,16 +149,30 @@ function ConsultationForm() {
     if (isRecording) {
       recognitionRef.current?.stop();
       setIsRecording(false);
-    } else {
-      recognitionRef.current?.start();
-      setIsRecording(true);
+      return;
+    }
+
+    recognitionRef.current?.start();
+    setIsRecording(true);
+
+    if (!hasProPlan) {
+      const nextVoiceCount = usage.voiceRecordingCount + 1;
+      persistUsage({
+        consultationCount: usage.consultationCount,
+        voiceRecordingCount: nextVoiceCount,
+        trialStartedAt: usage.trialStartedAt,
+      });
     }
   }
 
-  const specialtyOptions = useMemo(() => specialties[selectedCategory as keyof typeof specialties], [selectedCategory]);
-
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+
+    if (!canCreateConsultation) {
+      setOutput('You have reached your Free Trial consultation limit. Upgrade to Pro for unlimited consultations.');
+      return;
+    }
+
     setOutput('');
     setLoading(true);
 
@@ -135,6 +203,14 @@ function ConsultationForm() {
         setOutput(buffer);
       },
       onclose() {
+        if (!hasProPlan) {
+          const nextConsultationCount = usage.consultationCount + 1;
+          persistUsage({
+            consultationCount: nextConsultationCount,
+            voiceRecordingCount: usage.voiceRecordingCount,
+            trialStartedAt: usage.trialStartedAt,
+          });
+        }
         setLoading(false);
       },
       onerror(err) {
@@ -155,7 +231,7 @@ function ConsultationForm() {
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white">New Consultation</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-300">Use specialty templates and dictation for faster documentation.</p>
               </div>
-              <Badge>Live AI Summary</Badge>
+              <Badge>{hasProPlan ? 'Pro Plan' : 'Free Trial'}</Badge>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -221,7 +297,7 @@ function ConsultationForm() {
                   <button
                     type="button"
                     onClick={toggleRecording}
-                    disabled={!speechSupported}
+                    disabled={!speechSupported || !canUseVoiceRecording}
                     className={`rounded-lg px-3 py-2 text-xs font-semibold transition ${
                       isRecording
                         ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-200'
@@ -240,16 +316,22 @@ function ConsultationForm() {
                   placeholder="Dictate or type detailed consultation notes..."
                 />
                 {!speechSupported && <p className="text-xs text-amber-600">Speech recognition is not available in this browser.</p>}
+                {!hasProPlan && !canUseVoiceRecording && (
+                  <p className="text-xs text-red-600">Free Trial includes up to {FREE_TRIAL_LIMITS.voiceRecordings} voice recordings. Upgrade to Pro for unlimited recordings.</p>
+                )}
                 {isRecording && <p className="text-xs font-medium text-red-600">Recording in progress… your note is updating live.</p>}
               </div>
 
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || !canCreateConsultation}
                 className="w-full rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-400"
               >
                 {loading ? 'Generating Summary…' : 'Generate Summary'}
               </button>
+              {!canCreateConsultation && (
+                <p className="text-xs text-red-600">Free Trial includes {FREE_TRIAL_LIMITS.consultations} consultations and lasts {FREE_TRIAL_LIMITS.trialDays} days. Upgrade to Pro for unlimited usage.</p>
+              )}
             </form>
           </Card>
 
@@ -272,7 +354,8 @@ function ConsultationForm() {
           <Card>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Today&apos;s Snapshot</h3>
             <div className="mt-4 grid gap-3">
-              <Stat label="Consultations" value="18" />
+              <Stat label="Consultations" value={hasProPlan ? 'Unlimited' : `${usage.consultationCount}/${FREE_TRIAL_LIMITS.consultations}`} />
+              <Stat label="Voice Recordings" value={hasProPlan ? 'Unlimited' : `${usage.voiceRecordingCount}/${FREE_TRIAL_LIMITS.voiceRecordings}`} />
               <Stat label="Templates Used" value={selectedSpecialty} />
               <Stat label="Estimated Time Saved" value="2h 20m" />
             </div>
@@ -295,31 +378,16 @@ function ConsultationForm() {
               <p>{emailTranslations[selectedLanguage]}</p>
             </div>
           </Card>
+          {!hasProPlan && (
+            <Card>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Upgrade to Pro</h3>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">Unlock unlimited consultations and unlimited voice recordings.</p>
+              <div className="mt-4">
+                <PricingTable />
+              </div>
+            </Card>
+          )}
         </div>
-      </div>
-    </AppShell>
-  );
-}
-
-function SubscriptionFallback() {
-  return (
-    <AppShell title="Professional Plan Required" subtitle="Keep your testing payment simulation and unlock full consultation generation.">
-      <div className="grid gap-6 lg:grid-cols-[2fr_3fr]">
-        <Card>
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">Upgrade to Healthcare Professional Plan</h2>
-          <p className="mt-3 text-sm text-gray-600 dark:text-gray-300">
-            Access AI-generated summaries, collaboration, analytics, and multilingual follow-up communication.
-          </p>
-          <ul className="mt-5 space-y-2 text-sm text-gray-700 dark:text-gray-200">
-            <li>• Consultation and chart automation</li>
-            <li>• Team collaboration workspace</li>
-            <li>• Usage analytics and productivity insights</li>
-            <li>• Maintains existing Clerk testing payment flow</li>
-          </ul>
-        </Card>
-        <Card>
-          <PricingTable />
-        </Card>
       </div>
     </AppShell>
   );
@@ -332,9 +400,7 @@ export default function ProductPage() {
         <RedirectToSignIn />
       </SignedOut>
       <SignedIn>
-        <Protect plan="premium_subscription" fallback={<SubscriptionFallback />}>
-          <ConsultationForm />
-        </Protect>
+        <ConsultationForm />
       </SignedIn>
     </>
   );

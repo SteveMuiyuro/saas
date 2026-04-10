@@ -2,23 +2,30 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { PricingTable, SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
 import { AppShell } from '../components/app-shell';
 import { Card } from '../components/ui';
+import { FREE_TRIAL_LIMITS } from '../lib/plans';
 
 const tiers = [
   {
     name: 'Free Trial',
     monthly: 0,
     yearly: 0,
-    description: 'Try MediNotes Pro with core features before subscribing.',
-    features: ['14-day trial', '50 consultations', 'Specialty templates', 'Email summaries'],
+    description: 'Start free and test the core workflow with strict plan limits.',
+    features: [
+      `${FREE_TRIAL_LIMITS.trialDays} days free trial`,
+      `Up to ${FREE_TRIAL_LIMITS.consultations} consultations`,
+      `Up to ${FREE_TRIAL_LIMITS.voiceRecordings} voice recordings`,
+    ],
   },
   {
     name: 'Pro',
-    monthly: 29,
-    yearly: 290,
-    description: 'For practices that need full automation, collaboration, and analytics.',
-    features: ['Unlimited consultations', 'Voice dictation', 'Analytics dashboard', 'Shared templates'],
+    monthly: 10,
+    yearly: 108,
+    yearlyBeforeDiscount: 120,
+    description: 'For clinics that need unlimited consultation and dictation usage.',
+    features: ['Unlimited consultations', 'Unlimited voice recordings'],
     highlighted: true,
   },
 ];
@@ -27,20 +34,20 @@ export default function PricingPage() {
   const [annual, setAnnual] = useState(false);
 
   return (
-    <AppShell title="Pricing" subtitle="Choose the plan that matches your clinic workflow.">
+    <AppShell title="Pricing" subtitle="Billing and access are synchronized with Clerk subscriptions.">
       <div className="space-y-6">
         <Card>
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Simple, transparent pricing</h2>
-              <p className="text-sm text-gray-600 dark:text-gray-300">Switch between monthly and yearly billing for Pro at any time.</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">Pro is $10/month or $108/year (10% off from $120/year).</p>
             </div>
             <button
               type="button"
               onClick={() => setAnnual((prev) => !prev)}
               className="rounded-xl bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
             >
-              {annual ? 'Yearly billing (save 16%)' : 'Monthly billing'}
+              {annual ? 'Yearly billing (save 10%)' : 'Monthly billing'}
             </button>
           </div>
         </Card>
@@ -57,49 +64,44 @@ export default function PricingPage() {
                 ${tier.name === 'Pro' ? (annual ? tier.yearly : tier.monthly) : tier.monthly}
                 <span className="text-base font-medium text-gray-500">{tier.name === 'Pro' ? (annual ? ' /year' : ' /month') : ''}</span>
               </p>
+              {tier.name === 'Pro' && annual && (
+                <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+                  <span className="mr-1 line-through">$120</span>
+                  <span className="font-semibold text-green-600">$108</span> yearly (10% discount)
+                </p>
+              )}
               <ul className="mt-5 space-y-2 text-sm text-gray-700 dark:text-gray-200">
                 {tier.features.map((feature) => (
                   <li key={feature}>• {feature}</li>
                 ))}
               </ul>
-              <Link
-                href="/product"
-                className="mt-6 inline-block rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
-              >
-                {tier.name === 'Free Trial' ? 'Start Free Trial' : 'Choose Pro'}
-              </Link>
+              <div className="mt-6">
+                <SignedIn>
+                  <Link href="/subscription" className="inline-block rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">
+                    Manage Subscription
+                  </Link>
+                </SignedIn>
+                <SignedOut>
+                  <SignInButton mode="modal">
+                    <button className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">
+                      {tier.name === 'Free Trial' ? 'Start Free Trial' : 'Choose Pro'}
+                    </button>
+                  </SignInButton>
+                </SignedOut>
+              </div>
             </Card>
           ))}
         </div>
 
-        <Card>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Feature comparison</h3>
-          <div className="mt-4 overflow-x-auto">
-            <table className="min-w-full text-left text-sm">
-              <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="py-3 pr-4 font-semibold text-gray-600 dark:text-gray-300">Feature</th>
-                  <th className="py-3 pr-4 font-semibold text-gray-600 dark:text-gray-300">Free Trial</th>
-                  <th className="py-3 font-semibold text-gray-600 dark:text-gray-300">Pro</th>
-                </tr>
-              </thead>
-              <tbody className="text-gray-700 dark:text-gray-200">
-                {[
-                  ['Specialty templates', '✓', '✓'],
-                  ['Voice dictation', '—', '✓'],
-                  ['Collaboration', '—', '✓'],
-                  ['Analytics dashboard', '—', '✓'],
-                ].map((row) => (
-                  <tr key={row[0]} className="border-b border-gray-100 dark:border-gray-800">
-                    {row.map((col) => (
-                      <td key={`${row[0]}-${col}`} className="py-3 pr-4">{col}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Card>
+        <SignedIn>
+          <Card>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Checkout with Clerk Billing</h3>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">Your active Clerk subscription determines which plan features are available in the app.</p>
+            <div className="mt-4">
+              <PricingTable />
+            </div>
+          </Card>
+        </SignedIn>
       </div>
     </AppShell>
   );
