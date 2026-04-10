@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState, type PropsWithChildren } from 'react';
+import { type PropsWithChildren } from 'react';
 import { UserButton } from '@clerk/nextjs';
 
 const navItems = [
@@ -11,25 +11,6 @@ const navItems = [
 
 export function AppShell({ children, title, subtitle }: PropsWithChildren<{ title: string; subtitle?: string }>) {
   const router = useRouter();
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window === 'undefined') {
-      return true;
-    }
-
-    return window.localStorage.getItem('theme') !== 'light';
-  });
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', isDarkMode);
-    window.localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-  }, [isDarkMode]);
-
-  const handleThemeToggle = () => {
-    const nextIsDarkMode = !isDarkMode;
-
-    setIsDarkMode(nextIsDarkMode);
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900">
       <div className="mx-auto flex max-w-7xl gap-6 px-4 py-6 lg:px-8">
@@ -66,14 +47,6 @@ export function AppShell({ children, title, subtitle }: PropsWithChildren<{ titl
                 {subtitle && <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">{subtitle}</p>}
               </div>
               <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={handleThemeToggle}
-                  className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
-                  aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
-                >
-                  {isDarkMode ? '☀️ Light' : '🌙 Dark'}
-                </button>
                 <UserButton showName />
               </div>
             </div>
