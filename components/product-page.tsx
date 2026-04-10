@@ -172,6 +172,18 @@ function ConsultationForm() {
     setUsageVersion((v) => v + 1);
   }
 
+  function formatSnapshotCount(count: number, singularLabel: string, pluralLabel: string) {
+    if (count === 0) {
+      return `No ${pluralLabel} yet`;
+    }
+
+    if (count === 1) {
+      return `1 ${singularLabel}`;
+    }
+
+    return `${count} ${pluralLabel}`;
+  }
+
   function toggleRecording() {
     if (!speechSupported || !canUseVoiceRecording) return;
 
@@ -201,6 +213,11 @@ function ConsultationForm() {
       return;
     }
 
+    persistUsage({
+      consultationCount: usage.consultationCount,
+      voiceRecordingCount: usage.voiceRecordingCount + 1,
+      trialStartedAt: usage.trialStartedAt,
+    });
     recognitionRef.current?.start();
     setIsRecording(true);
 
@@ -245,14 +262,12 @@ function ConsultationForm() {
         setOutput(buffer);
       },
       onclose() {
-        if (!hasProPlan) {
-          const nextConsultationCount = usage.consultationCount + 1;
-          persistUsage({
-            consultationCount: nextConsultationCount,
-            voiceRecordingCount: usage.voiceRecordingCount,
-            trialStartedAt: usage.trialStartedAt,
-          });
-        }
+        const nextConsultationCount = usage.consultationCount + 1;
+        persistUsage({
+          consultationCount: nextConsultationCount,
+          voiceRecordingCount: usage.voiceRecordingCount,
+          trialStartedAt: usage.trialStartedAt,
+        });
         setLoading(false);
       },
       onerror(err) {
@@ -417,8 +432,8 @@ function ConsultationForm() {
           <Card>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Today&apos;s Snapshot</h3>
             <div className="mt-4 grid gap-3">
-              <Stat label="Consultations" value={hasProPlan ? 'Unlimited' : `${usage.consultationCount}/${FREE_TRIAL_LIMITS.consultations}`} />
-              <Stat label="Voice Recordings" value={hasProPlan ? 'Unlimited' : 'Not available'} />
+              <Stat label="Consultations" value={formatSnapshotCount(usage.consultationCount, 'consultation', 'consultations')} />
+              <Stat label="Voice Recordings" value={formatSnapshotCount(usage.voiceRecordingCount, 'voice recording', 'voice recordings')} />
               <Stat label="Templates Used" value={selectedSpecialty} />
               <Stat label="Estimated Time Saved" value="2h 20m" />
             </div>
