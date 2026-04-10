@@ -3,6 +3,7 @@
 import { PricingTable, useAuth } from '@clerk/nextjs';
 import { AppShell } from '../components/app-shell';
 import { Card, Stat } from '../components/ui';
+import { clerkPricingTableAppearance } from '../lib/clerk-appearance';
 import { FREE_TRIAL_LIMITS, PLAN_KEYS } from '../lib/plans';
 
 export default function SubscriptionPage() {
@@ -37,13 +38,15 @@ export default function SubscriptionPage() {
         </div>
 
         <div className="space-y-6">
-          <Card>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Billing</h3>
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">Pro pricing: $10/month or $108/year (10% discount from $120).</p>
-            <div className="mt-4">
-              <PricingTable />
-            </div>
-          </Card>
+          <div id="billing">
+            <Card>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Billing</h3>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">Pro pricing: $10/month or $108/year (10% discount from $120). Use the controls below to switch plans or cancel.</p>
+              <div className="mt-4">
+                <PricingTable appearance={clerkPricingTableAppearance} />
+              </div>
+            </Card>
+          </div>
         </div>
       </div>
     </AppShell>
