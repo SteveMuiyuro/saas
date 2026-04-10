@@ -8,15 +8,15 @@ import { Card } from '../components/ui';
 const tiers = [
   {
     name: 'Starter',
-    monthly: 19,
-    yearly: 15,
+    monthly: 10,
+    yearly: 108,
     description: 'For solo doctors starting with AI-assisted notes.',
     features: ['100 consultations/mo', 'Basic specialty templates', 'Email summaries'],
   },
   {
     name: 'Professional',
-    monthly: 79,
-    yearly: 63,
+    monthly: 10,
+    yearly: 108,
     description: 'For growing practices that need automation + analytics.',
     features: ['Unlimited consultations', 'Voice dictation', 'Analytics dashboard', 'Shared templates'],
     highlighted: true,
@@ -47,7 +47,7 @@ export default function PricingPage() {
               onClick={() => setAnnual((prev) => !prev)}
               className="rounded-xl bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
             >
-              {annual ? 'Yearly billing (save 20%)' : 'Monthly billing'}
+              {annual ? 'Yearly billing (save 10%)' : 'Monthly billing'}
             </button>
           </div>
         </Card>
@@ -62,7 +62,9 @@ export default function PricingPage() {
               <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">{tier.description}</p>
               <p className="mt-5 text-3xl font-bold text-gray-900 dark:text-white">
                 {tier.monthly ? `$${annual ? tier.yearly : tier.monthly}` : 'Custom'}
-                {tier.monthly && <span className="text-base font-medium text-gray-500"> /user/mo</span>}
+                {tier.monthly && (
+                  <span className="text-base font-medium text-gray-500">{annual ? ' /year (10% off upfront)' : ' /month'}</span>
+                )}
               </p>
               <ul className="mt-5 space-y-2 text-sm text-gray-700 dark:text-gray-200">
                 {tier.features.map((feature) => (

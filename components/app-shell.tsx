@@ -51,9 +51,11 @@ export function AppShell({ children, title, subtitle }: PropsWithChildren<{ titl
               <div className="flex items-center gap-3">
                 <Link
                   href="/"
-                  className="rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
+                  aria-label="Go to landing page"
+                  title="Go to landing page"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-lg text-gray-700 transition hover:bg-gray-100 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
                 >
-                  Landing Page
+                  🏠
                 </Link>
                 <UserButton showName />
               </div>
