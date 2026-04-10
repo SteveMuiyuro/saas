@@ -51,6 +51,8 @@ const emailTranslations: Record<string, string> = {
   French: "Merci d'avoir assisté à votre consultation aujourd'hui. Veuillez suivre votre plan de traitement et planifier un suivi dans 2 semaines.",
 };
 
+const fieldClassName = 'mt-2 w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm shadow-sm transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:ring-blue-900/60';
+
 function ConsultationForm() {
   const { getToken } = useAuth();
   const [patientName, setPatientName] = useState('');
@@ -156,35 +158,35 @@ function ConsultationForm() {
               <Badge>Live AI Summary</Badge>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <label className="space-y-2 text-sm">
-                  <span className="font-medium text-gray-700 dark:text-gray-200">Patient Name</span>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid gap-5 sm:grid-cols-2">
+                <label className="block text-sm">
+                  <span className="text-sm font-medium leading-none text-gray-700 dark:text-gray-200">Patient Name</span>
                   <input
                     type="text"
                     required
                     value={patientName}
                     onChange={(e) => setPatientName(e.target.value)}
-                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    className={fieldClassName}
                     placeholder="Enter patient's full name"
                   />
                 </label>
-                <label className="space-y-2 text-sm">
-                  <span className="font-medium text-gray-700 dark:text-gray-200">Date of Visit</span>
+                <label className="block text-sm">
+                  <span className="text-sm font-medium leading-none text-gray-700 dark:text-gray-200">Date of Visit</span>
                   <DatePicker
                     selected={visitDate}
                     onChange={(d: Date | null) => setVisitDate(d)}
                     dateFormat="yyyy-MM-dd"
                     placeholderText="Select date"
                     required
-                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    className={fieldClassName}
                   />
                 </label>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <label className="space-y-2 text-sm">
-                  <span className="font-medium text-gray-700 dark:text-gray-200">Specialty Category</span>
+              <div className="grid gap-5 sm:grid-cols-2">
+                <label className="block text-sm">
+                  <span className="text-sm font-medium leading-none text-gray-700 dark:text-gray-200">Specialty Category</span>
                   <select
                     value={selectedCategory}
                     onChange={(e) => {
@@ -192,19 +194,19 @@ function ConsultationForm() {
                       setSelectedCategory(category);
                       setSelectedSpecialty(specialties[category as keyof typeof specialties][0]);
                     }}
-                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    className={fieldClassName}
                   >
                     {Object.keys(specialties).map((category) => (
                       <option key={category} value={category}>{category}</option>
                     ))}
                   </select>
                 </label>
-                <label className="space-y-2 text-sm">
-                  <span className="font-medium text-gray-700 dark:text-gray-200">Sub-specialty Template</span>
+                <label className="block text-sm">
+                  <span className="text-sm font-medium leading-none text-gray-700 dark:text-gray-200">Sub-specialty Template</span>
                   <select
                     value={selectedSpecialty}
                     onChange={(e) => setSelectedSpecialty(e.target.value)}
-                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    className={fieldClassName}
                   >
                     {specialtyOptions.map((specialty) => (
                       <option key={specialty} value={specialty}>{specialty}</option>
@@ -213,9 +215,9 @@ function ConsultationForm() {
                 </label>
               </div>
 
-              <div className="space-y-2 text-sm">
+              <div className="space-y-2.5 text-sm">
                 <div className="flex items-center justify-between">
-                  <span className="font-medium text-gray-700 dark:text-gray-200">Consultation Notes</span>
+                  <span className="text-sm font-medium leading-none text-gray-700 dark:text-gray-200">Consultation Notes</span>
                   <button
                     type="button"
                     onClick={toggleRecording}
@@ -234,7 +236,7 @@ function ConsultationForm() {
                   rows={8}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  className="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                  className={fieldClassName}
                   placeholder="Dictate or type detailed consultation notes..."
                 />
                 {!speechSupported && <p className="text-xs text-amber-600">Speech recognition is not available in this browser.</p>}
@@ -282,7 +284,7 @@ function ConsultationForm() {
             <select
               value={selectedLanguage}
               onChange={(e) => setSelectedLanguage(e.target.value)}
-              className="mt-4 w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+              className={fieldClassName}
             >
               {Object.keys(emailTranslations).map((language) => (
                 <option key={language} value={language}>{language}</option>

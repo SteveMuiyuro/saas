@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect } from 'react';
 import Link from 'next/link';
-import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import { SignInButton, SignedIn, SignedOut, UserButton, useAuth } from '@clerk/nextjs';
+import { useRouter } from 'next/router';
 import { Badge, Card, SectionHeading } from '../components/ui';
 
 const features = [
@@ -20,6 +22,26 @@ const steps = [
 ];
 
 export default function Home() {
+  const { isLoaded, isSignedIn } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      router.replace('/dashboard');
+    }
+  }, [isLoaded, isSignedIn, router]);
+
+  if (isSignedIn) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-gradient-to-b from-white via-blue-50/40 to-white dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
+        <Card className="max-w-md text-center">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Redirecting to your dashboard…</h2>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">We&apos;re taking you to your consultation workspace.</p>
+        </Card>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-white via-blue-50/40 to-white dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
