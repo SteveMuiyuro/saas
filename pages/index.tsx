@@ -47,7 +47,6 @@ export default function Home() {
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <nav className="mb-16 flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-blue-600">Healthcare AI Platform</p>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">MediNotes Pro</h1>
           </div>
           <div className="flex items-center gap-3">
@@ -142,23 +141,6 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="py-16">
-          <SectionHeading eyebrow="Pricing" title="Plans for every practice size" description="Start free, scale as your clinic grows." />
-          <div className="grid gap-5 md:grid-cols-3">
-            {['Starter', 'Professional', 'Enterprise'].map((plan, idx) => (
-              <Card key={plan} className={idx === 1 ? 'border-blue-200 ring-2 ring-blue-200 dark:border-blue-700 dark:ring-blue-700/60' : ''}>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{plan}</h3>
-                <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">{idx === 0 ? 'Solo practitioners' : idx === 1 ? 'Growing clinics' : 'Large organizations'}</p>
-                <p className="mt-4 text-3xl font-bold text-gray-900 dark:text-white">{idx === 0 ? '$19' : idx === 1 ? '$79' : 'Custom'}</p>
-              </Card>
-            ))}
-          </div>
-          <div className="mt-8 text-center">
-            <Link href="/pricing" className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700">
-              View Full Pricing
-            </Link>
-          </div>
-        </section>
 
         <section className="py-16">
           <SectionHeading eyebrow="Trusted by clinicians" title="Built to reduce admin burden and improve continuity of care" />
