@@ -154,9 +154,8 @@ function ConsultationForm() {
   }, [getToken, resolveHasProPlan]);
   const activeFreeTrial = !hasProPlan && isWithinFreeTrial(usage.trialStartedAt);
   const consultationsRemaining = Math.max(FREE_TRIAL_LIMITS.consultations - usage.consultationCount, 0);
-  const voiceRecordingsRemaining = Math.max(FREE_TRIAL_LIMITS.voiceRecordings - usage.voiceRecordingCount, 0);
   const canCreateConsultation = hasProPlan || (activeFreeTrial && consultationsRemaining > 0);
-  const canUseVoiceRecording = hasProPlan || (activeFreeTrial && voiceRecordingsRemaining > 0);
+  const canUseVoiceRecording = hasProPlan;
 
   const specialtyOptions = useMemo(() => specialties[selectedCategory as keyof typeof specialties], [selectedCategory]);
 
@@ -198,14 +197,6 @@ function ConsultationForm() {
     recognitionRef.current?.start();
     setIsRecording(true);
 
-    if (!hasProPlan) {
-      const nextVoiceCount = usage.voiceRecordingCount + 1;
-      persistUsage({
-        consultationCount: usage.consultationCount,
-        voiceRecordingCount: nextVoiceCount,
-        trialStartedAt: usage.trialStartedAt,
-      });
-    }
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -274,7 +265,7 @@ function ConsultationForm() {
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white">New Consultation</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-300">Use specialty templates and dictation for faster documentation.</p>
               </div>
-              <Badge>{hasProPlan ? 'Pro Plan' : 'Free Trial'}</Badge>
+              <Badge>{hasProPlan ? 'Pro Plan' : 'Free'}</Badge>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -337,18 +328,20 @@ function ConsultationForm() {
               <div className="space-y-2.5 text-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium leading-none text-gray-700 dark:text-gray-200">Consultation Notes</span>
-                  <button
-                    type="button"
-                    onClick={toggleRecording}
-                    disabled={!speechSupported || !canUseVoiceRecording}
-                    className={`rounded-lg px-3 py-2 text-xs font-semibold transition ${
-                      isRecording
-                        ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-200'
-                        : 'bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/40 dark:text-blue-200 dark:hover:bg-blue-900/70'
-                    } disabled:cursor-not-allowed disabled:opacity-60`}
-                  >
-                    {isRecording ? '⏹ Stop Recording' : '🎙 Start Dictation'}
-                  </button>
+                  {hasProPlan && (
+                    <button
+                      type="button"
+                      onClick={toggleRecording}
+                      disabled={!speechSupported || !canUseVoiceRecording}
+                      className={`rounded-lg px-3 py-2 text-xs font-semibold transition ${
+                        isRecording
+                          ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-200'
+                          : 'bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/40 dark:text-blue-200 dark:hover:bg-blue-900/70'
+                      } disabled:cursor-not-allowed disabled:opacity-60`}
+                    >
+                      {isRecording ? '⏹ Stop Recording' : '🎙 Start Dictation'}
+                    </button>
+                  )}
                 </div>
                 <textarea
                   required
@@ -359,8 +352,8 @@ function ConsultationForm() {
                   placeholder="Dictate or type detailed consultation notes..."
                 />
                 {!speechSupported && <p className="text-xs text-amber-600">Speech recognition is not available in this browser.</p>}
-                {!hasProPlan && !canUseVoiceRecording && (
-                  <p className="text-xs text-red-600">Free Trial includes up to {FREE_TRIAL_LIMITS.voiceRecordings} voice recordings. Upgrade to Pro for unlimited recordings.</p>
+                {!hasProPlan && (
+                  <p className="text-xs text-red-600">Voice dictation is available on Pro only.</p>
                 )}
                 {isRecording && <p className="text-xs font-medium text-red-600">Recording in progress… your note is updating live.</p>}
               </div>
@@ -398,29 +391,31 @@ function ConsultationForm() {
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Today&apos;s Snapshot</h3>
             <div className="mt-4 grid gap-3">
               <Stat label="Consultations" value={hasProPlan ? 'Unlimited' : `${usage.consultationCount}/${FREE_TRIAL_LIMITS.consultations}`} />
-              <Stat label="Voice Recordings" value={hasProPlan ? 'Unlimited' : `${usage.voiceRecordingCount}/${FREE_TRIAL_LIMITS.voiceRecordings}`} />
+              <Stat label="Voice Recordings" value={hasProPlan ? 'Unlimited' : 'Not available'} />
               <Stat label="Templates Used" value={selectedSpecialty} />
               <Stat label="Estimated Time Saved" value="2h 20m" />
             </div>
           </Card>
 
-          <Card>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">UI Language</h3>
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">Switch language context for patient emails.</p>
-            <select
-              value={selectedLanguage}
-              onChange={(e) => setSelectedLanguage(e.target.value)}
-              className={fieldClassName}
-            >
-              {Object.keys(emailTranslations).map((language) => (
-                <option key={language} value={language}>{language}</option>
-              ))}
-            </select>
-            <div className="mt-4 rounded-xl bg-gray-50 p-4 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-200">
-              <p className="mb-2 font-semibold">Patient email preview ({selectedLanguage})</p>
-              <p>{emailTranslations[selectedLanguage]}</p>
-            </div>
-          </Card>
+          {hasProPlan && (
+            <Card>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">UI Language</h3>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">Switch language context for patient emails.</p>
+              <select
+                value={selectedLanguage}
+                onChange={(e) => setSelectedLanguage(e.target.value)}
+                className={fieldClassName}
+              >
+                {Object.keys(emailTranslations).map((language) => (
+                  <option key={language} value={language}>{language}</option>
+                ))}
+              </select>
+              <div className="mt-4 rounded-xl bg-gray-50 p-4 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-200">
+                <p className="mb-2 font-semibold">Patient email preview ({selectedLanguage})</p>
+                <p>{emailTranslations[selectedLanguage]}</p>
+              </div>
+            </Card>
+          )}
           {!hasProPlan && (
             <Card>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Upgrade to Pro</h3>
