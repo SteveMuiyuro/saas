@@ -41,7 +41,7 @@ export default function Home() {
             </SignedOut>
             <SignedIn>
               <div className="flex items-center gap-3">
-                <Link href="/product" className="rounded-lg bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700">
+                <Link href="/dashboard" className="rounded-lg bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700">
                   Open App
                 </Link>
                 <UserButton showName />
@@ -66,7 +66,7 @@ export default function Home() {
                 </SignInButton>
               </SignedOut>
               <SignedIn>
-                <Link href="/product" className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700">
+                <Link href="/dashboard" className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700">
                   Go to Dashboard
                 </Link>
               </SignedIn>
@@ -158,7 +158,7 @@ export default function Home() {
                 </SignInButton>
               </SignedOut>
               <SignedIn>
-                <Link href="/product" className="rounded-xl bg-white px-6 py-3 font-semibold text-blue-700 transition hover:bg-blue-50">
+                <Link href="/dashboard" className="rounded-xl bg-white px-6 py-3 font-semibold text-blue-700 transition hover:bg-blue-50">
                   Go to App
                 </Link>
               </SignedIn>

@@ -4,12 +4,9 @@ import type { PropsWithChildren } from 'react';
 import { UserButton } from '@clerk/nextjs';
 
 const navItems = [
-  { href: '/product', label: 'Dashboard', emoji: '🏠' },
-  { href: '/analytics', label: 'Analytics', emoji: '📈' },
-  { href: '/shared-templates', label: 'Shared Templates', emoji: '🤝' },
+  { href: '/dashboard', label: 'Dashboard', emoji: '🏠' },
   { href: '/pricing', label: 'Pricing', emoji: '💳' },
   { href: '/subscription', label: 'Subscription', emoji: '⚙️' },
-  { href: '/billing', label: 'Billing', emoji: '🧾' },
 ];
 
 export function AppShell({ children, title, subtitle }: PropsWithChildren<{ title: string; subtitle?: string }>) {
