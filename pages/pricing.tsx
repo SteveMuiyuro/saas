@@ -1,14 +1,14 @@
 "use client";
 
-import { PricingTable, SignedIn, SignedOut, SignInButton, useAuth } from '@clerk/nextjs';
+import { PricingTable, SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
 import { AppShell } from '../components/app-shell';
 import { Card } from '../components/ui';
 import { clerkPricingTableAppearance } from '../lib/clerk-appearance';
-import { FREE_TRIAL_LIMITS, PLAN_KEYS } from '../lib/plans';
+import { FREE_TRIAL_LIMITS } from '../lib/plans';
+import { useProPlanStatus } from '../lib/use-pro-plan';
 
 export default function PricingPage() {
-  const { has } = useAuth();
-  const hasProPlan = Boolean(has?.({ plan: PLAN_KEYS.pro }) || has?.({ plan: PLAN_KEYS.legacyPro }));
+  const hasProPlan = useProPlanStatus();
 
   return (
     <AppShell title="Pricing" subtitle="Billing and access are synchronized with Clerk subscriptions.">

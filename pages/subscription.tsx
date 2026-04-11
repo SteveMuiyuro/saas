@@ -1,14 +1,13 @@
 "use client";
 
-import { useAuth } from '@clerk/nextjs';
 import Link from 'next/link';
 import { AppShell } from '../components/app-shell';
 import { Card, Stat } from '../components/ui';
-import { FREE_TRIAL_LIMITS, PLAN_KEYS } from '../lib/plans';
+import { FREE_TRIAL_LIMITS } from '../lib/plans';
+import { useProPlanStatus } from '../lib/use-pro-plan';
 
 export default function SubscriptionPage() {
-  const { has } = useAuth();
-  const hasProPlan = Boolean(has?.({ plan: PLAN_KEYS.pro }) || has?.({ plan: PLAN_KEYS.legacyPro }));
+  const hasProPlan = useProPlanStatus();
 
   return (
     <AppShell title="Subscription Management" subtitle="Plan access is synchronized from Clerk Billing.">
