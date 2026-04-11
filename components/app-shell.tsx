@@ -47,7 +47,7 @@ export function AppShell({ children, title, subtitle }: PropsWithChildren<{ titl
                 {subtitle && <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">{subtitle}</p>}
               </div>
               <div className="flex items-center gap-3">
-                <UserButton showName />
+                <UserButton showName appearance={{ elements: { userButtonOuterIdentifier: 'text-gray-900 dark:text-white' } }} />
               </div>
             </div>
           </header>

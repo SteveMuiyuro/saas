@@ -65,7 +65,7 @@ export default function Home() {
                 <Link href="/dashboard" className="rounded-lg bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700">
                   Open App
                 </Link>
-                <UserButton showName />
+                <UserButton showName appearance={{ elements: { userButtonOuterIdentifier: 'text-gray-900 dark:text-white' } }} />
               </div>
             </SignedIn>
           </div>
