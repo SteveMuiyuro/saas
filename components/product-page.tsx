@@ -239,7 +239,7 @@ function ConsultationForm() {
 
   return (
     <AppShell title="Consultation Dashboard" subtitle="Capture notes, generate patient communication, and monitor plan usage.">
-      <div className="grid gap-6 xl:grid-cols-3">
+      <div className="grid items-start gap-6 xl:grid-cols-3">
         <div className="space-y-6 xl:col-span-2">
           <Card>
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
@@ -395,7 +395,7 @@ function ConsultationForm() {
           </Card>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-6 xl:self-start">
           <Card>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Today&apos;s Snapshot</h3>
             <div className="mt-4 grid gap-3">
