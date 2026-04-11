@@ -362,9 +362,17 @@ function ConsultationForm() {
               <button
                 type="submit"
                 disabled={loading || !canCreateConsultation}
-                className="w-full rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-400"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-400"
               >
-                {loading ? 'Generating Summary…' : 'Generate Summary'}
+                {loading ? (
+                  <>
+                    <span>Generating Summary</span>
+                    <span
+                      className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
+                      aria-hidden="true"
+                    />
+                  </>
+                ) : 'Generate Summary'}
               </button>
               {!canCreateConsultation && (
                 <p className="text-xs text-red-600">Free Trial includes {FREE_TRIAL_LIMITS.consultations} consultations and lasts {FREE_TRIAL_LIMITS.trialDays} days. Upgrade to Pro for unlimited usage.</p>
