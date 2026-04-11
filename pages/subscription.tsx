@@ -30,7 +30,7 @@ export default function SubscriptionPage() {
                 Cancel Pro subscription
               </Link>
               <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                This opens Clerk Billing where you can manage or cancel your active Pro subscription.
+                This opens Clerk Billing where you can manage or cancel your active Pro subscription. After cancellation, Pro access stays active for 24 hours before switching to Free Trial limits.
               </p>
             </div>
           )}
