@@ -1,6 +1,5 @@
 export const PLAN_KEYS = {
   pro: 'user:pro',
-  legacyPro: 'premium_subscription',
 } as const;
 
 export const FREE_TRIAL_LIMITS = {
