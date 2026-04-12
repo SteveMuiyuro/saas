@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, FormEvent, useRef } from 'react';
+import { useMemo, useState, FormEvent, useRef, useEffect } from 'react';
 import { useAuth, PricingTable, SignedIn, SignedOut, RedirectToSignIn } from '@clerk/nextjs';
 import DatePicker from 'react-datepicker';
 import ReactMarkdown from 'react-markdown';
@@ -84,6 +84,10 @@ function ConsultationForm() {
   const patientNameInputRef = useRef<HTMLInputElement | null>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const [usageVersion, setUsageVersion] = useState(0);
+
+  useEffect(() => {
+    patientNameInputRef.current?.focus();
+  }, []);
 
   const usage = useMemo<UsageState>(() => {
     void usageVersion;
