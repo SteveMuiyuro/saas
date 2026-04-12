@@ -1,5 +1,19 @@
 export const PLAN_KEYS = {
-  pro: 'user:pro',
+  pro: [
+    'user:pro',
+    'user:pro_monthly',
+    'user:pro_annual',
+    'user:pro-monthly',
+    'user:pro-annual',
+  ],
+} as const;
+
+export const FEATURE_KEYS = {
+  recording: [
+    'user:recording',
+    'user:voice_recording',
+    'user:voice-recording',
+  ],
 } as const;
 
 export const FREE_TRIAL_LIMITS = {
