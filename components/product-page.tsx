@@ -10,7 +10,7 @@ import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { AppShell } from './app-shell';
 import { Badge, Card, Stat } from './ui';
 import { clerkPricingTableAppearance } from '../lib/clerk-appearance';
-import { FREE_TRIAL_LIMITS, isWithinFreeTrial } from '../lib/plans';
+import { FREE_TRIAL_LIMITS } from '../lib/plans';
 import { useProPlanStatus } from '../lib/use-pro-plan';
 import {
   Select,
@@ -118,10 +118,10 @@ function ConsultationForm() {
 
   const speechSupported = typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition);
   const hasProPlan = useProPlanStatus();
-  const activeFreeTrial = !hasProPlan && isWithinFreeTrial(usage.trialStartedAt);
   const consultationsRemaining = Math.max(FREE_TRIAL_LIMITS.consultations - usage.consultationCount, 0);
-  const canCreateConsultation = hasProPlan || (activeFreeTrial && consultationsRemaining > 0);
-  const canUseVoiceRecording = hasProPlan;
+  const voiceRecordingsRemaining = Math.max(FREE_TRIAL_LIMITS.voiceRecordings - usage.voiceRecordingCount, 0);
+  const canCreateConsultation = hasProPlan || consultationsRemaining > 0;
+  const canUseVoiceRecording = hasProPlan || voiceRecordingsRemaining > 0;
 
   const specialtyOptions = useMemo(() => specialties[selectedCategory as keyof typeof specialties], [selectedCategory]);
 
@@ -186,7 +186,7 @@ function ConsultationForm() {
     e.preventDefault();
 
     if (!canCreateConsultation) {
-      setOutput('You have reached your Free Trial consultation limit. Upgrade to Pro for unlimited consultations.');
+      setOutput('You have reached your Free plan consultation limit. Try Pro for unlimited consultations.');
       return;
     }
 
@@ -353,9 +353,7 @@ function ConsultationForm() {
                   placeholder="Dictate or type detailed consultation notes..."
                 />
                 {!speechSupported && <p className="text-xs text-amber-600">Speech recognition is not available in this browser.</p>}
-                {!hasProPlan && (
-                  <p className="text-xs text-red-600">Voice dictation is available on Pro only.</p>
-                )}
+                {!hasProPlan && <p className="text-xs text-red-600">Free includes up to {FREE_TRIAL_LIMITS.voiceRecordings} voice recordings.</p>}
                 {isRecording && <p className="text-xs font-medium text-red-600">Recording in progress… your note is updating live.</p>}
               </div>
 
@@ -372,10 +370,10 @@ function ConsultationForm() {
                       aria-hidden="true"
                     />
                   </>
-                ) : 'Generate Summary'}
+                ) : !canCreateConsultation ? 'Try Pro for unlimited consultations' : 'Generate Summary'}
               </button>
               {!canCreateConsultation && (
-                <p className="text-xs text-red-600">Free Trial includes {FREE_TRIAL_LIMITS.consultations} consultations and lasts {FREE_TRIAL_LIMITS.trialDays} days. Upgrade to Pro for unlimited usage.</p>
+                <p className="text-xs text-red-600">Free includes up to {FREE_TRIAL_LIMITS.consultations} consultations. Try Pro for unlimited consultations.</p>
               )}
             </form>
           </Card>
