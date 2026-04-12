@@ -2,7 +2,7 @@
 
 import { useAuth } from '@clerk/nextjs';
 import { useCallback, useEffect, useState } from 'react';
-import { PLAN_KEYS } from './plans';
+import { FEATURE_KEYS, PLAN_KEYS } from './plans';
 
 const PRO_CANCELLATION_KEY = 'medinotes-pro-cancelled-at';
 const PRO_GRACE_PERIOD_MS = 24 * 60 * 60 * 1000;
@@ -10,7 +10,14 @@ const PRO_GRACE_PERIOD_MS = 24 * 60 * 60 * 1000;
 export function useProPlanStatus() {
   const { has, getToken } = useAuth();
 
-  const resolveHasProPlan = useCallback(() => Boolean(has?.({ plan: PLAN_KEYS.pro })), [has]);
+  const resolveHasProPlan = useCallback(() => {
+    const hasProPlan = PLAN_KEYS.pro.some((planKey) => Boolean(has?.({ plan: planKey })));
+    if (hasProPlan) {
+      return true;
+    }
+
+    return FEATURE_KEYS.recording.some((featureKey) => Boolean(has?.({ feature: featureKey })));
+  }, [has]);
   const [hasProPlan, setHasProPlan] = useState(resolveHasProPlan);
 
   const isWithinProGracePeriod = useCallback(() => {
