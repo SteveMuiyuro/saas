@@ -123,6 +123,7 @@ function ConsultationForm() {
   const voiceRecordingsRemaining = Math.max(FREE_TRIAL_LIMITS.voiceRecordings - usage.voiceRecordingCount, 0);
   const canCreateConsultation = hasProPlan || consultationsRemaining > 0;
   const canUseVoiceRecording = hasProPlan || voiceRecordingsRemaining > 0;
+  const reachedFreeConsultationLimit = !hasProPlan && consultationsRemaining === 0;
 
   const specialtyOptions = useMemo(() => specialties[selectedCategory as keyof typeof specialties], [selectedCategory]);
 
@@ -336,7 +337,17 @@ function ConsultationForm() {
 
               <div className="space-y-2.5 text-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium leading-none text-gray-700 dark:text-gray-200">Consultation Notes</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium leading-none text-gray-700 dark:text-gray-200">Consultation Notes</span>
+                    {reachedFreeConsultationLimit && (
+                      <button
+                        type="button"
+                        className="rounded-lg bg-amber-100 px-3 py-1.5 text-xs font-semibold text-amber-700 transition hover:bg-amber-200 dark:bg-amber-900/40 dark:text-amber-200 dark:hover:bg-amber-900/60"
+                      >
+                        Try Pro
+                      </button>
+                    )}
+                  </div>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
@@ -385,7 +396,7 @@ function ConsultationForm() {
                       aria-hidden="true"
                     />
                   </>
-                ) : !canCreateConsultation ? 'Try Pro for unlimited consultations' : 'Generate Summary'}
+                ) : 'Generate Summary'}
               </button>
               {!canCreateConsultation && (
                 <p className="text-xs text-red-600">Free includes up to {FREE_TRIAL_LIMITS.consultations} consultations. Try Pro for unlimited consultations.</p>
