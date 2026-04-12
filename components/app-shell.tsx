@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { type PropsWithChildren } from 'react';
-import { UserButton } from '@clerk/nextjs';
+import { SignInButton, UserButton, useAuth } from '@clerk/nextjs';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', emoji: '🏠' },
@@ -11,6 +11,9 @@ const navItems = [
 
 export function AppShell({ children, title, subtitle }: PropsWithChildren<{ title: string; subtitle?: string }>) {
   const router = useRouter();
+  const { isSignedIn } = useAuth();
+  const visibleNavItems = isSignedIn ? navItems : navItems.filter((item) => item.href !== '/dashboard');
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900">
       <div className="mx-auto flex max-w-7xl gap-6 px-4 py-6 lg:px-8">
@@ -19,7 +22,7 @@ export function AppShell({ children, title, subtitle }: PropsWithChildren<{ titl
             MedNotes Pro
           </Link>
           <nav className="space-y-2">
-            {navItems.map((item) => {
+            {visibleNavItems.map((item) => {
               const isActive = router.pathname === item.href;
               return (
                 <Link
@@ -47,7 +50,13 @@ export function AppShell({ children, title, subtitle }: PropsWithChildren<{ titl
                 {subtitle && <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">{subtitle}</p>}
               </div>
               <div className="flex items-center gap-3">
-                <UserButton showName appearance={{ elements: { userButtonOuterIdentifier: 'text-gray-900 dark:text-white' } }} />
+                {isSignedIn ? (
+                  <UserButton showName appearance={{ elements: { userButtonOuterIdentifier: 'text-gray-900 dark:text-white' } }} />
+                ) : (
+                  <SignInButton mode="modal">
+                    <button className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Sign in</button>
+                  </SignInButton>
+                )}
               </div>
             </div>
           </header>
