@@ -1,19 +1,16 @@
+const PRO_PLAN_BASE_KEYS = ['pro', 'pro_monthly', 'pro_annual', 'pro-monthly', 'pro-annual'] as const;
+const RECORDING_FEATURE_BASE_KEYS = ['recording', 'voice_recording', 'voice-recording'] as const;
+
+function buildClerkKeys(baseKeys: readonly string[]) {
+  return baseKeys.flatMap((key) => [key, `user:${key}`]);
+}
+
 export const PLAN_KEYS = {
-  pro: [
-    'user:pro',
-    'user:pro_monthly',
-    'user:pro_annual',
-    'user:pro-monthly',
-    'user:pro-annual',
-  ],
+  pro: buildClerkKeys(PRO_PLAN_BASE_KEYS),
 } as const;
 
 export const FEATURE_KEYS = {
-  recording: [
-    'user:recording',
-    'user:voice_recording',
-    'user:voice-recording',
-  ],
+  recording: buildClerkKeys(RECORDING_FEATURE_BASE_KEYS),
 } as const;
 
 export const FREE_TRIAL_LIMITS = {
