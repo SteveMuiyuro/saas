@@ -46,9 +46,12 @@ export default function PricingPage() {
                     <li>• Up to {FREE_TRIAL_LIMITS.voiceRecordings} voice recordings</li>
                   </ul>
                   {!hasProPlan && (
-                    <button className="mt-4 rounded-lg border border-blue-600 px-3 py-1.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-50 dark:border-blue-400 dark:text-blue-300 dark:hover:bg-blue-950/40">
+                    <a
+                      href="#clerk-pricing-table"
+                      className="mt-4 inline-flex rounded-lg border border-blue-600 px-3 py-1.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-50 dark:border-blue-400 dark:text-blue-300 dark:hover:bg-blue-950/40"
+                    >
                       Try Pro
-                    </button>
+                    </a>
                   )}
                 </div>
                 <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 dark:border-blue-700 dark:bg-blue-950/40">
@@ -68,7 +71,7 @@ export default function PricingPage() {
                   </ul>
                 </div>
               </div>
-              <div className="mt-4">
+              <div id="clerk-pricing-table" className="mt-4 scroll-mt-24">
                 <PricingTable appearance={clerkPricingTableAppearance} />
               </div>
             </Card>
