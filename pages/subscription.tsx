@@ -39,7 +39,6 @@ export default function SubscriptionPage() {
         <Card>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Plan Limits</h3>
           <ul className="mt-4 space-y-2 text-sm text-gray-700 dark:text-gray-200">
-            <li>• Free Trial: {FREE_TRIAL_LIMITS.trialDays} days access</li>
             <li>• Free Trial: up to {FREE_TRIAL_LIMITS.consultations} consultations</li>
             <li>• Free Trial: up to {FREE_TRIAL_LIMITS.voiceRecordings} voice recordings</li>
             <li>• Pro: unlimited consultations</li>
