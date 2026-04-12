@@ -417,7 +417,6 @@ function ConsultationForm() {
               <Stat label="Consultations" value={formatSnapshotCount(usage.consultationCount, 'consultation', 'consultations')} />
               <Stat label="Voice Recordings" value={formatSnapshotCount(usage.voiceRecordingCount, 'voice recording', 'voice recordings')} />
               <Stat label="Templates Used" value={selectedSpecialty} />
-              <Stat label="Estimated Time Saved" value="2h 20m" />
             </div>
           </Card>
 
