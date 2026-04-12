@@ -96,6 +96,10 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+button {
+  cursor: pointer;
+}
+
 .page-transition {
   transition:
     opacity 220ms ease,
