@@ -81,6 +81,7 @@ function ConsultationForm() {
   const [selectedSpecialty, setSelectedSpecialty] = useState(specialties.Cardiology[0]);
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [isRecording, setIsRecording] = useState(false);
+  const patientNameInputRef = useRef<HTMLInputElement | null>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const [usageVersion, setUsageVersion] = useState(0);
 
@@ -182,6 +183,12 @@ function ConsultationForm() {
 
   }
 
+  function clearConsultationFields() {
+    setPatientName('');
+    setNotes('');
+    patientNameInputRef.current?.focus();
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
@@ -255,6 +262,7 @@ function ConsultationForm() {
                 <label className="block text-sm">
                   <span className="text-sm font-medium leading-none text-gray-700 dark:text-gray-200">Patient Name</span>
                   <input
+                    ref={patientNameInputRef}
                     type="text"
                     required
                     value={patientName}
@@ -329,20 +337,29 @@ function ConsultationForm() {
               <div className="space-y-2.5 text-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium leading-none text-gray-700 dark:text-gray-200">Consultation Notes</span>
-                  {hasProPlan && (
+                  <div className="flex items-center gap-2">
                     <button
                       type="button"
-                      onClick={toggleRecording}
-                      disabled={!speechSupported || !canUseVoiceRecording}
-                      className={`rounded-lg px-3 py-2 text-xs font-semibold transition ${
-                        isRecording
-                          ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-200'
-                          : 'bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/40 dark:text-blue-200 dark:hover:bg-blue-900/70'
-                      } disabled:cursor-not-allowed disabled:opacity-60`}
+                      onClick={clearConsultationFields}
+                      className="rounded-lg bg-gray-100 px-3 py-2 text-xs font-semibold text-gray-700 transition hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
                     >
-                      {isRecording ? '⏹ Stop Recording' : '🎙 Start Dictation'}
+                      Clear
                     </button>
-                  )}
+                    {hasProPlan && (
+                      <button
+                        type="button"
+                        onClick={toggleRecording}
+                        disabled={!speechSupported || !canUseVoiceRecording}
+                        className={`rounded-lg px-3 py-2 text-xs font-semibold transition ${
+                          isRecording
+                            ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-200'
+                            : 'bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/40 dark:text-blue-200 dark:hover:bg-blue-900/70'
+                        } disabled:cursor-not-allowed disabled:opacity-60`}
+                      >
+                        {isRecording ? '⏹ Stop Recording' : '🎙 Start Dictation'}
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <textarea
                   required
