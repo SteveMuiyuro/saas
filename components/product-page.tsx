@@ -345,20 +345,18 @@ function ConsultationForm() {
                     >
                       Clear
                     </button>
-                    {hasProPlan && (
-                      <button
-                        type="button"
-                        onClick={toggleRecording}
-                        disabled={!speechSupported || !canUseVoiceRecording}
-                        className={`rounded-lg px-3 py-2 text-xs font-semibold transition ${
-                          isRecording
-                            ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-200'
-                            : 'bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/40 dark:text-blue-200 dark:hover:bg-blue-900/70'
-                        } disabled:cursor-not-allowed disabled:opacity-60`}
-                      >
-                        {isRecording ? '⏹ Stop Recording' : '🎙 Start Dictation'}
-                      </button>
-                    )}
+                    <button
+                      type="button"
+                      onClick={toggleRecording}
+                      disabled={!speechSupported || !canUseVoiceRecording}
+                      className={`rounded-lg px-3 py-2 text-xs font-semibold transition ${
+                        isRecording
+                          ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-200'
+                          : 'bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/40 dark:text-blue-200 dark:hover:bg-blue-900/70'
+                      } disabled:cursor-not-allowed disabled:opacity-60`}
+                    >
+                      {isRecording ? '⏹ Stop Recording' : '🎙 Start Dictation'}
+                    </button>
                   </div>
                 </div>
                 <textarea
