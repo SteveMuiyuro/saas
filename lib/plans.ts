@@ -1,4 +1,17 @@
-const PRO_PLAN_BASE_KEYS = ['pro', 'pro_monthly', 'pro_annual', 'pro-monthly', 'pro-annual'] as const;
+const PRO_PLAN_BASE_KEYS = [
+  'pro',
+  'pro_monthly',
+  'pro_annual',
+  'pro-monthly',
+  'pro-annual',
+  'premium',
+  'premium_subscription',
+  'premium-subscription',
+  'premium_monthly',
+  'premium_annual',
+  'premium-monthly',
+  'premium-annual',
+] as const;
 const RECORDING_FEATURE_BASE_KEYS = ['recording', 'voice_recording', 'voice-recording'] as const;
 
 function buildClerkKeys(baseKeys: readonly string[]) {
