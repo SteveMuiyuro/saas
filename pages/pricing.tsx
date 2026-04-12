@@ -41,7 +41,6 @@ export default function PricingPage() {
                   </div>
                   <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">$0/month</p>
                   <ul className="mt-3 space-y-2 text-sm text-gray-700 dark:text-gray-200">
-                    <li>• {FREE_TRIAL_LIMITS.trialDays} day trial access</li>
                     <li>• Up to {FREE_TRIAL_LIMITS.consultations} consultations</li>
                     <li>• Up to {FREE_TRIAL_LIMITS.voiceRecordings} voice recordings</li>
                   </ul>
@@ -90,7 +89,6 @@ export default function PricingPage() {
                   </div>
                   <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">$0/month</p>
                   <ul className="mt-3 space-y-2 text-sm text-gray-700 dark:text-gray-200">
-                    <li>• {FREE_TRIAL_LIMITS.trialDays} day trial access</li>
                     <li>• Up to {FREE_TRIAL_LIMITS.consultations} consultations</li>
                     <li>• Up to {FREE_TRIAL_LIMITS.voiceRecordings} voice recordings</li>
                   </ul>
