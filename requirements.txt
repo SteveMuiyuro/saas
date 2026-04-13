@@ -1,5 +1,6 @@
 fastapi
 uvicorn
 openai
-fastapi-clerk-auth
 pydantic
+fastapi-clerk-auth
+python-dotenv
