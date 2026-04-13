@@ -78,7 +78,7 @@ export default function Home() {
               Automate consultations! Get clear and actionable next steps.
             </h2>
             <p className="mt-6 max-w-xl text-lg text-gray-600 dark:text-gray-300">
-              MedAppoint Pro helps doctors document faster, communicate clearly, and stay aligned with teams using AI-powered summaries and follow-ups.
+              MedAppoint Pro helps doctors document faster, communicate clearly, and stay aligned using AI-powered summaries and follow-ups.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <SignedOut>
