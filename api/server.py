@@ -7,6 +7,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from fastapi_clerk_auth import ClerkConfig, ClerkHTTPBearer, HTTPAuthorizationCredentials
 from openai import OpenAI
+from dotenv import load_dotenv
+import os
+
+env_path = Path(__file__).resolve().parent.parent / ".env"
+load_dotenv(env_path)
+
+clerk_config = ClerkConfig(
+    jwks_url=os.getenv("CLERK_JWKS_URL")
+)
 
 app = FastAPI()
 

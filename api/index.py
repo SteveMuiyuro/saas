@@ -5,6 +5,7 @@ from pydantic import BaseModel  # type: ignore
 from fastapi_clerk_auth import ClerkConfig, ClerkHTTPBearer, HTTPAuthorizationCredentials  # type: ignore
 from openai import OpenAI  # type: ignore
 
+
 app = FastAPI()
 clerk_config = ClerkConfig(jwks_url=os.getenv("CLERK_JWKS_URL"))
 clerk_guard = ClerkHTTPBearer(clerk_config)

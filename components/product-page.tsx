@@ -206,15 +206,17 @@ function ConsultationForm() {
     setLoading(true);
 
     const jwt = await getToken();
+
+    console.log("JWT TOKEN:", jwt);
     if (!jwt) {
       setOutput('Authentication required');
       setLoading(false);
       return;
     }
-
+  console.log("Sending Authorization header:", `Bearer ${jwt}`);
     const controller = new AbortController();
     let buffer = '';
-
+  
     await fetchEventSource('/api/consultation', {
       signal: controller.signal,
       method: 'POST',
