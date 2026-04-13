@@ -47,7 +47,7 @@ export default function Home() {
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <nav className="mb-16 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">MedNotes Pro</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">MedAppoint Pro</h1>
           </div>
           <div className="flex items-center gap-3">
             <Link href="/pricing" className="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">
@@ -75,10 +75,10 @@ export default function Home() {
           <div>
             <Badge>Built for modern clinics</Badge>
             <h2 className="mt-5 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white">
-              Automate consultations! Get clear and actionable next steps .
+              Automate consultations! Get clear and actionable next steps.
             </h2>
             <p className="mt-6 max-w-xl text-lg text-gray-600 dark:text-gray-300">
-              MedNotes Pro helps doctors document faster, communicate clearly, and stay aligned with teams using AI-powered summaries and follow-ups.
+              MedAppoint Pro helps doctors document faster, communicate clearly, and stay aligned with teams using AI-powered summaries and follow-ups.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <SignedOut>
@@ -154,7 +154,7 @@ export default function Home() {
         <section className="py-20">
           <Card className="bg-gradient-to-r from-blue-600 to-indigo-600 text-center text-white">
             <h3 className="text-3xl font-bold">Ready to modernize your consultation workflow?</h3>
-            <p className="mx-auto mt-3 max-w-2xl text-blue-100">Join teams using MedNotes Pro to deliver faster documentation and better patient communication.</p>
+            <p className="mx-auto mt-3 max-w-2xl text-blue-100">Join teams using MedAppoint Pro to deliver faster documentation and better patient communication.</p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <SignedOut>
                 <SignInButton mode="modal">

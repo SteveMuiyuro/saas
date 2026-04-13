@@ -19,7 +19,7 @@ export function AppShell({ children, title, subtitle }: PropsWithChildren<{ titl
       <div className="mx-auto flex max-w-7xl gap-6 px-4 py-6 lg:px-8">
         <aside className="hidden w-72 shrink-0 rounded-2xl border border-gray-200/80 bg-white/90 p-5 shadow-sm backdrop-blur lg:block dark:border-gray-800 dark:bg-gray-900/90">
           <Link href="/" className="mb-8 block text-xl font-bold text-gray-900 dark:text-white">
-            MedNotes Pro
+            MedAppoint Pro
           </Link>
           <nav className="space-y-2">
             {visibleNavItems.map((item) => {

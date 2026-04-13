@@ -4,7 +4,7 @@ export default function Document() {
   return (
     <Html lang="en" className="dark">
       <Head>
-        <title>MedNotes Consultation Assistant</title>
+        <title>MedAppoint Consultation Assistant</title>
         <meta name="description" content="AI-powered medical consultation summaries" />
       </Head>
       <body>
