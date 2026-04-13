@@ -31,12 +31,12 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build \
+          docker build --no-cache \
           --platform linux/amd64 \
           --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }} \
           -t $ECR_REPOSITORY:$IMAGE_TAG .
 
-      - name: Tag Docker image
+      - name: Tag Docker images
         run: |
           docker tag $ECR_REPOSITORY:$IMAGE_TAG \
           ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG

@@ -1,5 +1,4 @@
 node_modules
-.next
 .env
 .env.local
 .git
@@ -10,3 +9,4 @@ README.md
 .vercel
 dist
 build
+out
